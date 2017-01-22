@@ -1,4 +1,4 @@
-package com.epam.task2;
+
 
 public class SportEquipment {
 

@@ -1,13 +1,14 @@
-package com.epam.task2;
 
+
+import java.util.HashMap;
 import java.util.Map;
 import java.io.*;
 
 
 public class Shop {
 
-    private Map<SportEquipment, Integer> goods;
-    private Map<String, RentUnit> rents;
+    private Map<SportEquipment, Integer> goods = new HashMap<SportEquipment, Integer>();
+    private Map<String, RentUnit> rents = new HashMap<String, RentUnit>();
 
     public Shop(String shopFileName, String rentFileName) {
 
@@ -17,7 +18,7 @@ public class Shop {
             String[] good;
             while (( line = input.readLine()) != null)
             {
-                System.out.println(line);
+                //System.out.println(line);
                 good = line.split(" ");
                 if (good.length == 4) {
                     SportEquipment equipment = new SportEquipment(good[0], good[1], Integer.parseInt(good[2]));
@@ -39,7 +40,7 @@ public class Shop {
             String[] rent;
             while (( line = input.readLine()) != null)
             {
-                System.out.println(line);
+                //System.out.println(line);
                 rent = line.split(" ");
                 int numberOfRentsPerPerson = Integer.parseInt(rent[0]);
                 String name = rent[1];

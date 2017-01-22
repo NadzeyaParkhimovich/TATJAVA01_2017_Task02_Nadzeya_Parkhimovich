@@ -1,10 +1,8 @@
-package com.epam.task2;
-
 import java.util.ArrayList;
 
 public class RentUnit {
 
-    private ArrayList<SportEquipment> units;
+    private ArrayList<SportEquipment> units = new ArrayList<SportEquipment>();
 
     public boolean addEquipment (SportEquipment equipment) {
         if (units.size() < 3)
