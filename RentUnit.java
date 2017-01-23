@@ -14,6 +14,10 @@ public class RentUnit {
         }
     }
 
+    public boolean removeEquipment(SportEquipment equipment) {
+        return units.remove(equipment);
+    }
+    
     public ArrayList<SportEquipment> getUnits() {
         return units;
     }

@@ -18,7 +18,6 @@ public class Shop {
             String[] good;
             while (( line = input.readLine()) != null)
             {
-                //System.out.println(line);
                 good = line.split(" ");
                 if (good.length == 4) {
                     SportEquipment equipment = new SportEquipment(good[0], good[1], Integer.parseInt(good[2]));
@@ -40,7 +39,6 @@ public class Shop {
             String[] rent;
             while (( line = input.readLine()) != null)
             {
-                //System.out.println(line);
                 rent = line.split(" ");
                 int numberOfRentsPerPerson = Integer.parseInt(rent[0]);
                 String name = rent[1];
@@ -62,7 +60,7 @@ public class Shop {
 
     }
 
-    public int findEquipment(SportEquipment equipment) {
+    public int findEquipmentInShop(SportEquipment equipment) {
         return goods.get(equipment);
     }
 
@@ -72,18 +70,38 @@ public class Shop {
     }
 
     public void rentEquipment(SportEquipment equipment, String name) {
-        RentUnit unit = rents.get(name);
-        if(unit != null) {
-            if(unit.addEquipment(equipment)) {
-                rents.put(name, unit);
-            }
-        } else {
-            unit = new RentUnit();
-            if(unit.addEquipment(equipment)) {
-                rents.put(name, unit);
+        int amount  = findEquipmentInShop(equipment);
+    	if (amount > 0) {
+        	RentUnit unit = rents.get(name);
+            if(unit != null) {
+                if(unit.addEquipment(equipment)) {
+                    rents.put(name, unit);
+                    goods.put(equipment, amount - 1);
+                }
+            } else {
+                unit = new RentUnit();
+                if(unit.addEquipment(equipment)) {
+                    rents.put(name, unit);
+                    goods.put(equipment, amount - 1);
+                }
             }
         }
+    	
 
+    }
+    
+    public void returnEquipment(SportEquipment equipment, String name) {
+    	RentUnit unit = rents.get(name);
+    	if(unit != null) {
+    		if(unit.removeEquipment(equipment)) {
+    			if(unit.getUnits().size() != 0 ) {
+    				rents.put(name, unit);
+    			} else {
+    				rents.remove(name);
+    			}
+    			arrivalOfEquipment(equipment, 1);
+    		}
+    	}
     }
 
     public RentUnit findRents(String name) {
@@ -125,11 +143,35 @@ public class Shop {
             for (Map.Entry entry : goods.entrySet()) {
 
                 SportEquipment equipment = (SportEquipment)entry.getKey();
-                output.write(equipment.getCategory() + " " + equipment.getTitle() + " " + equipment.getPrice() + " " + entry.getValue());
+                output.write(equipment.getCategory() + " " + equipment.getTitle() + " " + equipment.getPrice() + " " + entry.getValue() + "\n");
             }
             output.close();
         } catch (IOException e) {
+        	System.out.println("Error in writing Goodsfile");
+        }
 
+    }
+    
+    public void saveRentsInFile(String fileName) {
+        try {
+            Writer output = new BufferedWriter(new FileWriter(fileName));
+            for (Map.Entry entry : rents.entrySet()) {
+
+                String name = (String)entry.getKey();
+                RentUnit rentUnit = (RentUnit)entry.getValue();
+                int count = rentUnit.getUnits().size();
+                String line = count + " " + name + " ";
+                for(SportEquipment equipment : rentUnit.getUnits())
+                {
+                	line += equipment.getCategory() + " " + equipment.getTitle() + " " + equipment.getPrice() + " ";
+                }
+                line += "\n";
+                output.write(line);
+                
+            }
+            output.close();
+        } catch (IOException e) {
+        	System.out.println("Error in writing  Rentsfile");
         }
 
     }
