@@ -61,15 +61,21 @@ public class Shop {
     }
 
     public int findEquipmentInShop(SportEquipment equipment) {
+    	if (goods.get(equipment) == null) {
+    		return 0;
+    	}
         return goods.get(equipment);
     }
 
     public void arrivalOfEquipment(SportEquipment equipment, int amount) {
-        int number = goods.get(equipment);
+        int number = 0;
+        if(goods.get(equipment) != null) {
+        	number = goods.get(equipment);
+        }
         goods.put(equipment, number + amount);
     }
 
-    public void rentEquipment(SportEquipment equipment, String name) {
+    public boolean rentEquipment(SportEquipment equipment, String name) {
         int amount  = findEquipmentInShop(equipment);
     	if (amount > 0) {
         	RentUnit unit = rents.get(name);
@@ -77,20 +83,28 @@ public class Shop {
                 if(unit.addEquipment(equipment)) {
                     rents.put(name, unit);
                     goods.put(equipment, amount - 1);
+                    return true;
+                } else {
+                	return false;
                 }
             } else {
                 unit = new RentUnit();
                 if(unit.addEquipment(equipment)) {
                     rents.put(name, unit);
                     goods.put(equipment, amount - 1);
+                    return true;
+                } else {
+                	return false;
                 }
             }
+        } else {
+        	return false;
         }
     	
 
     }
     
-    public void returnEquipment(SportEquipment equipment, String name) {
+    public boolean returnEquipment(SportEquipment equipment, String name) {
     	RentUnit unit = rents.get(name);
     	if(unit != null) {
     		if(unit.removeEquipment(equipment)) {
@@ -100,7 +114,12 @@ public class Shop {
     				rents.remove(name);
     			}
     			arrivalOfEquipment(equipment, 1);
+    			return true;
+    		} else {
+    			return false;
     		}
+    	} else {
+    		return false;
     	}
     }
 
