@@ -1,3 +1,0 @@
-tennis ball 3 100
-tennis raket 25 10
-swimming hat 5 4
